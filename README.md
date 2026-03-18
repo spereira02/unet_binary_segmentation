@@ -4,6 +4,8 @@
 
 This repository contains a **binary image segmentation** project developed as part of a university machine learning course. The task is to segment **mugs** from RGB images by predicting a binary mask for each input image.
 
+The goal was not to detect arbitrary mugs in general: other mugs could also appear in the scene, including unlabeled mugs or mugs with different labels, and were treated as background. This makes the task more selective than generic mug segmentation.
+
 The project implements a **custom U-Net style convolutional neural network in PyTorch** together with a full training and evaluation pipeline.
 
 My main work focused on:
@@ -46,7 +48,16 @@ The dataset pipeline applies resizing, normalization, and synchronized augmentat
 
 ## Example Result
 
-Average IoU: 0.8469
+-  Average IoU: 0.8469
+<p align="center">
+  <img src="media/rgb.png" width="250">
+  <img src="media/gt.png" width="250">
+  <img src="media/prediction.png" width="250">
+</p>
+
+<p align="center">
+  <em>Example model output on the mug segmentation task. From left to right: input image, ground-truth mask, and predicted mask.</em>
+</p>
 
 ### Installation
 
@@ -54,10 +65,16 @@ Average IoU: 0.8469
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-export MPLCONFIGDIR=/tmp/matplotlib
+```
+
+### Trainig a model
+
+```bash
 python src/train.py --data_root ./datasets --ckpt_dir ./checkpoints
 ```
 
+Seperate evaluation can be done on a private test set, for example
 
-
-
+```bash
+python src/test.py --data_root ./datasets --split private_test --ckpt ./checkpoints/<timestamp>/model_epoch_<epoch>.pth
+```
