@@ -6,6 +6,17 @@ from torchvision import transforms
 import numpy as np
 from utils import IMAGE_SIZE, load_mask
 
+VALID_IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png")
+
+
+def _list_image_files(directory):
+    return sorted(
+        os.path.join(directory, fname)
+        for fname in os.listdir(directory)
+        if fname.lower().endswith(VALID_IMAGE_EXTENSIONS)
+    )
+
+
 class ETHMugsDataset(Dataset):
     def __init__(self, root_dir, mode="train"):
         self.mode = mode
@@ -13,8 +24,7 @@ class ETHMugsDataset(Dataset):
         self.rgb_dir = os.path.join(self.root_dir, 'rgb')
 
         # Paths for images
-        self.image_paths = [os.path.join(self.rgb_dir, fname) for fname in os.listdir(self.rgb_dir)]
-        self.image_paths.sort()
+        self.image_paths = _list_image_files(self.rgb_dir)
 
         self.mask_dir = None
         self.mask_paths = None
@@ -22,8 +32,12 @@ class ETHMugsDataset(Dataset):
         if mode != "test":
             # Paths for masks
             self.mask_dir = os.path.join(self.root_dir, 'masks')
-            self.mask_paths = [os.path.join(self.mask_dir, fname) for fname in os.listdir(self.mask_dir)]
-            self.mask_paths.sort()
+            self.mask_paths = _list_image_files(self.mask_dir)
+
+            if len(self.image_paths) != len(self.mask_paths):
+                raise ValueError(
+                    f"Found {len(self.image_paths)} images but {len(self.mask_paths)} masks in {self.root_dir}"
+                )
 
             self.mask_transform = transforms.Compose([
                 transforms.Resize(IMAGE_SIZE),
@@ -59,7 +73,7 @@ class ETHMugsDataset(Dataset):
         if self.mode != "test":
             mask_path = self.mask_paths[idx]
             mask = load_mask(mask_path)
-            mask = Image.fromarray(mask)
+            mask = Image.fromarray(mask.astype(np.uint8) * 255)
 
             
             seed = np.random.randint(2147483647)  # Generate random seed

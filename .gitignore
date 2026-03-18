@@ -1,1 +1,8 @@
 __pycache__
+datasets
+private_test
+public_test
+.venv
+.vscode
+checkpoints
+checkpoint.pth

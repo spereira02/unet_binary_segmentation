@@ -146,12 +146,12 @@ class DeepUNet(nn.Module):
 class EarlyStopping:
     def __init__(self, patience=7, verbose=False, delta=0):
         self.patience = patience
-        self.verbose = verbose
+        self.verbose = verbose  
         self.delta = delta
         self.counter = 0
         self.best_score = None
         self.early_stop = False
-        self.val_iou_max = -np.Inf
+        self.val_iou_max = -np.inf
 
     def __call__(self, val_iou, model):
         score = val_iou
@@ -197,9 +197,8 @@ def train(
     val_dataset = ETHMugsDataset(val_data_root, mode='val')
 
     #DataLoader 
-    train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)       
-    val_loader = DataLoader(val_dataset, batch_size=val_batch_size, shuffle=False)
-
+    train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True, num_workers=4, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=val_batch_size, shuffle=False, num_workers=4, pin_memory=True)
     model = build_model().to(device)
  
     criterion = nn.BCELoss()
