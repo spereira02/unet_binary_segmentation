@@ -50,7 +50,7 @@ The dataset pipeline applies resizing, normalization, and synchronized augmentat
 
 -  Average IoU: 0.8469
 <p align="center">
-  <img src="media/rgb.png" width="250">
+  <img src="media/rgb.jpg" width="250">
   <img src="media/gt.png" width="250">
   <img src="media/prediction.png" width="250">
 </p>
