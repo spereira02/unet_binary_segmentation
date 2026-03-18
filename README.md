@@ -46,6 +46,8 @@ The dataset pipeline applies resizing, normalization, and synchronized augmentat
 
 ## Example Result
 
+Average IoU: 0.8469
+
 ### Installation
 
 ```bash
