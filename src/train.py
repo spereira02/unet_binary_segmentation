@@ -224,8 +224,6 @@ def train(
             running_loss += loss.item()
 
             # Visualize every iteration in the last epoch
-            if epoch == epoch_num - 1:
-                visualize_sample(images[0].cpu().numpy(), gt_mask[0].cpu().numpy(), outputs[0].cpu().detach().numpy())
 
         print(f"Epoch {epoch+1}, Loss: {running_loss / len(train_loader):.4f}")
         lr_scheduler.step(running_loss)
