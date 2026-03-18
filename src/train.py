@@ -207,9 +207,9 @@ def train(
     lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1,patience=10)
     early_stopping = EarlyStopping(patience=7, verbose=True)
 
-    print(f"[INFO]: Number of training epochs: {20}")
-    print("[INFO]: Starting training...")
     epoch_num = 50
+    print(f"[INFO]: Number of training epochs: {epoch_num}")
+    print("[INFO]: Starting training...")
     for epoch in range(epoch_num):
         model.train()
         running_loss = 0.0
@@ -219,8 +219,6 @@ def train(
             optimizer.zero_grad()
             outputs = model(images)
             outputs = outputs.squeeze()
-            #print(outputs.shape)
-            #print(gt_mask.shape)
             loss = criterion(outputs, gt_mask)
             loss.backward()
             optimizer.step()
@@ -293,4 +291,3 @@ if __name__ == "__main__":
     print(f"[INFO]: Validation data root: {val_data_root}")
 
     train(ckpt_dir, train_data_root, val_data_root)
-

@@ -5,7 +5,6 @@ from PIL import Image
 import numpy as np
 
 import torch
-import torch.nn.functional as F
 
 from eth_mugs_dataset import ETHMugsDataset
 from train import build_model
@@ -29,13 +28,11 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--ckpt",
-        default="C:\\Users\\sebas\\OneDrive\\Desktop\\ETH\\2. Jahr\\4. Semester\\ML\\project2\\checkpoints\\best_model",
         type=str,
-        help="Path to the model checkpoint.",
+        required=True,
+        help="Path to a checkpoint file or a checkpoint directory containing checkpoint.pth.",
     )
     args = parser.parse_args()
-
-    print(f"arg: {args.split}")
 
     # Set data root
     if args.split == "public_test":
@@ -57,11 +54,12 @@ if __name__ == "__main__":
     model.to(device)  # Move the model to the appropriate device
 
     # Load model checkpoint
-    if args.ckpt:
-        checkpoint_path = os.path.join(args.ckpt, 'Checkpoint1.pth')  # or another filename as appropriate
-        checkpoint = torch.load(checkpoint_path, map_location=device)
-        model.load_state_dict(checkpoint)
-        #print(f"[INFO]: Loaded checkpoint from {checkpoint_path}")
+    checkpoint_path = args.ckpt
+    if os.path.isdir(checkpoint_path):
+        checkpoint_path = os.path.join(checkpoint_path, "checkpoint.pth")
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    model.load_state_dict(checkpoint)
+    print(f"[INFO]: Loaded checkpoint from {checkpoint_path}")
     model.eval()
 
     # Create an instance of the custom dataset
@@ -114,14 +112,7 @@ if __name__ == "__main__":
             # All values are 0 or 1, dtype: int
             pred_mask = load_mask(pred_mask_path)
 
-            """# Print masks for debugging
-            print(f"GT mask for sample {idx}:")
-            print(gt_mask)
-            print(f"Predicted mask for sample {idx}:")
-            print(pred_mask)"""
-
             iou = compute_iou(pred_mask, gt_mask)
-            #print(f"IoU for sample {idx}: {iou}")  # Print each IoU for debugging
 
             test_iou_sum += iou
 

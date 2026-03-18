@@ -16,8 +16,6 @@ class ETHMugsDataset(Dataset):
         self.image_paths = [os.path.join(self.rgb_dir, fname) for fname in os.listdir(self.rgb_dir)]
         self.image_paths.sort()
 
-        print(f"[DEBUG] Looking for images in: {self.rgb_dir}")
-
         self.mask_dir = None
         self.mask_paths = None
         self.mask_transform = None
@@ -26,8 +24,6 @@ class ETHMugsDataset(Dataset):
             self.mask_dir = os.path.join(self.root_dir, 'masks')
             self.mask_paths = [os.path.join(self.mask_dir, fname) for fname in os.listdir(self.mask_dir)]
             self.mask_paths.sort()
-
-            print(f"[DEBUG] Looking for masks in: {self.mask_dir}")
 
             self.mask_transform = transforms.Compose([
                 transforms.Resize(IMAGE_SIZE),
@@ -48,8 +44,7 @@ class ETHMugsDataset(Dataset):
             transforms.RandomVerticalFlip(),
         ])
 
-        print("[INFO] Dataset mode:", mode)
-        print("[INFO] Number of images in the ETHMugDataset: {}".format(len(self.image_paths)))
+        print(f"[INFO]: Loaded {len(self.image_paths)} {mode} samples from {self.root_dir}")
 
     def __len__(self):
         return len(self.image_paths)
