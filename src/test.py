@@ -7,7 +7,7 @@ import numpy as np
 import torch
 
 from eth_mugs_dataset import ETHMugsDataset
-from train import build_model
+from model import build_model
 from utils import IMAGE_SIZE, load_mask, compute_iou
 
 if __name__ == "__main__":
@@ -72,19 +72,19 @@ if __name__ == "__main__":
     )
 
     with torch.no_grad():
-        for i, test_image in enumerate(tqdm(test_dataloader)):
+        for test_image, pred_filename in tqdm(test_dataloader):
             test_image = test_image.to(device)
 
-            test_output = model(test_image)
-            test_output = (test_output > 0.5).float()  # Ensure binary values (0.0 or 1.0)
+            test_logits = model(test_image)
+            test_output = (torch.sigmoid(test_logits) > 0.5).float()
 
-            # Save the predicted mask
-            pred_filename = f"{str(i).zfill(4)}_mask.png"
-            pred_mask = test_output.squeeze().cpu().numpy().astype(np.uint8) * 255  # Convert to 0 and 255 for PNG
+            pred_mask = test_output.squeeze().cpu().numpy().astype(np.uint8) * 255
 
-            resized_pred_mask = Image.fromarray(pred_mask).resize((IMAGE_SIZE[1], IMAGE_SIZE[0]), resample=Image.NEAREST)
+            resized_pred_mask = Image.fromarray(pred_mask).resize(
+                (IMAGE_SIZE[1], IMAGE_SIZE[0]), resample=Image.NEAREST
+            )
 
-            resized_pred_mask.save(os.path.join(out_dir, pred_filename))
+            resized_pred_mask.save(os.path.join(out_dir, pred_filename[0]))
 
     # Run evaluation if using public test split
     if args.split == "public_test":

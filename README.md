@@ -35,20 +35,20 @@ The output is passed through a sigmoid activation to produce pixel-wise values i
 
 The project includes:
 
-- **Binary Cross-Entropy loss**
+- **BCEWithLogits loss**
 - **Adam optimizer**
 - **learning-rate scheduling**
 - **early stopping**
 - **checkpointing**
-- **validation using Intersection over Union (IoU)**
+- **validation using Intersection over Union (IoU) on a held-out split from the training set**
 
-The dataset pipeline applies resizing, normalization, and synchronized augmentation to both image and mask, including flips and color jitter.
+The dataset pipeline applies deterministic resizing and normalization for validation / test data, while training uses synchronized flips for image-mask pairs together with image-only color jitter.
 
 ---
 
 ## Example Result
 
--  Average IoU: 0.8469
+-  Average IoU: 0.8680
 <p align="center">
   <img src="media/rgb.jpg" width="250">
   <img src="media/gt.png" width="250">
@@ -73,8 +73,10 @@ pip install -r requirements.txt
 python src/train.py --data_root ./datasets --ckpt_dir ./checkpoints
 ```
 
-Seperate evaluation can be done on a private test set, for example
+This creates a timestamped run directory containing per-epoch checkpoints and the best validation checkpoint at `checkpoint.pth`.
+
+Separate evaluation can be done on a private test set, for example
 
 ```bash
-python src/test.py --data_root ./datasets --split private_test --ckpt ./checkpoints/<timestamp>/model_epoch_<epoch>.pth
+python src/test.py --data_root ./datasets --split private_test --ckpt ./checkpoints/<timestamp>/checkpoint.pth
 ```
