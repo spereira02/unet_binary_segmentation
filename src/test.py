@@ -34,7 +34,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # Set data root
     if args.split == "public_test":
         test_data_root = os.path.join(args.data_root, "public_test_images_378_252")
         out_dir = os.path.join("public_test", "prediction")
@@ -48,10 +47,9 @@ if __name__ == "__main__":
     print(f"[INFO]: Saving the predicted segmentation masks to {out_dir}")
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
-    # Build Model
-    model = build_model()  # Pass the number of classes as an argument
-    model.to(device)  # Move the model to the appropriate device
+  
+    model = build_model()  
+    model.to(device) 
 
     # Load model checkpoint
     checkpoint_path = args.ckpt
@@ -62,7 +60,6 @@ if __name__ == "__main__":
     print(f"[INFO]: Loaded checkpoint from {checkpoint_path}")
     model.eval()
 
-    # Create an instance of the custom dataset
     test_dataset = ETHMugsDataset(root_dir=test_data_root, mode="test")
 
     # Create dataloaders
@@ -99,7 +96,6 @@ if __name__ == "__main__":
             gt_mask_filenames == pred_mask_filenames
         ), "Predictions must have been saved with the same file names"
 
-
         num_samples_to_evaluate = len(gt_mask_filenames)
 
         test_iou_sum = 0.0
@@ -107,9 +103,7 @@ if __name__ == "__main__":
             gt_mask_path = os.path.join(gt_dir, gt_mask_filenames[idx])
             pred_mask_path = os.path.join(out_dir, pred_mask_filenames[idx])
 
-            # All values are 0 or 1, dtype: int
             gt_mask = load_mask(gt_mask_path)
-            # All values are 0 or 1, dtype: int
             pred_mask = load_mask(pred_mask_path)
 
             iou = compute_iou(pred_mask, gt_mask)
