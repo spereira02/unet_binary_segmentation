@@ -75,39 +75,37 @@ class OutConv(nn.Module):
 
 
 class DeepUNet(nn.Module):
-    def __init__(self, n_channels, n_classes, bilinear=False):
+    def __init__(self, n_channels, n_classes, bilinear=False, base_channels=32):
         super().__init__()
         self.n_channels = n_channels
         self.n_classes = n_classes
         self.bilinear = bilinear
+        self.base_channels = base_channels
 
-        self.inc = DoubleConv(n_channels, 64)
-        self.down1 = Down(64, 128)
-        self.down2 = Down(128, 256)
-        self.down3 = Down(256, 512)
-        self.down4 = Down(512, 1024)
-        self.down5 = Down(1024, 2048)
-        self.up1 = Up(2048, 1024, bilinear=bilinear)
-        self.up2 = Up(1024, 512, bilinear=bilinear)
-        self.up3 = Up(512, 256, bilinear=bilinear)
-        self.up4 = Up(256, 128, bilinear=bilinear)
-        self.up5 = Up(128, 64, bilinear=bilinear)
-        self.outc = OutConv(64, n_classes)
+        c1 = base_channels
+        c2 = c1 * 2
+        c3 = c2 * 2
+        c4 = c3 * 2
+
+        self.inc = DoubleConv(n_channels, c1)
+        self.down1 = Down(c1, c2)
+        self.down2 = Down(c2, c3)
+        self.down3 = Down(c3, c4)
+        self.up1 = Up(c4, c3, bilinear=bilinear)
+        self.up2 = Up(c3, c2, bilinear=bilinear)
+        self.up3 = Up(c2, c1, bilinear=bilinear)
+        self.outc = OutConv(c1, n_classes)
 
     def forward(self, x):
         x1 = self.inc(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
         x4 = self.down3(x3)
-        x5 = self.down4(x4)
-        x6 = self.down5(x5)
-        x7 = self.up1(x6, x5)
-        x8 = self.up2(x7, x4)
-        x9 = self.up3(x8, x3)
-        x10 = self.up4(x9, x2)
-        x11 = self.up5(x10, x1)
-        return self.outc(x11)
+        x5 = self.up1(x4, x3)
+        x6 = self.up2(x5, x2)
+        x7 = self.up3(x6, x1)
+        return self.outc(x7)
 
 
 def build_model():
-    return DeepUNet(3, 1)
+    return DeepUNet(3, 1, base_channels=32)
