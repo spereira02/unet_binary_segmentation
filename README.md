@@ -70,7 +70,7 @@ pip install -r requirements.txt
 ### Trainig a model
 
 ```bash
-python src/train.py --data_root ./datasets --ckpt_dir ./checkpoints
+python src/train.py --data_root ./datasets --ckpt_dir ./checkpoints --val_split 0.2 --seed 42
 ```
 
 This creates a timestamped run directory containing per-epoch checkpoints and the best validation checkpoint at `checkpoint.pth`.
