@@ -108,4 +108,4 @@ class DeepUNet(nn.Module):
 
 
 def build_model():
-    return DeepUNet(3, 1, base_channels=32)
+    return DeepUNet(3, 1, base_channels=64)
