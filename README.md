@@ -76,7 +76,7 @@ I ran a small architecture sweep over U-Net depth and width:
 | --- | ---: | ---: | ---: |
 | 5 levels | 0.8369 | 0.8606 | 0.8681 |
 | 4 levels | 0.7910 | 0.8494 | 0.9041 |
-| 3 levels | - | - | 0.9123 |
+| 3 levels | - | - | **0.9123** |
 | 2 levels | - | 0.7460 | 0.8526 |
 
 The main takeaway from this sweep is that a **3-level U-Net with `base_channels=64`** performed best on the public test split. Across the tested configurations, performance improved as depth was reduced from 5 levels to 3 levels, then dropped again at 2 levels, while reducing channel width also generally hurt performance.
