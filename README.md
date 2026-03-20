@@ -18,6 +18,28 @@ Some parts of the original project scaffolding, particularly parts of the testin
 
 ---
 
+## Robotics Relevance
+
+Semantic segmentation is widely used in robotic perception pipelines
+to identify task-relevant objects in cluttered environments.
+
+In this project, a U-Net model is trained to segment ETH-labelled mugs
+from RGB images. While the dataset focuses on mugs, the same approach
+can be applied to many robotics scenarios where a robot must detect
+specific objects before manipulation.
+
+Example applications include:
+
+• detecting packages on a conveyor belt for robotic pick-and-place  
+• identifying objects for grasp planning in manipulation tasks  
+• segmenting task-relevant items in warehouse automation systems  
+
+The segmentation output (pixel-wise object masks) can be used
+as input for downstream robotics modules such as object localization,
+pose estimation, and grasp planning.
+
+---
+
 ## Model
 
 The segmentation model is a **custom U-Net** with:
@@ -55,7 +77,17 @@ The dataset pipeline applies deterministic resizing and normalization for valida
 
 ---
 
-## Example Result
+## Evaluation and Prediction
+
+After training, the model is evaluated on a held-out test set.
+The evaluation script loads the trained network and generates
+segmentation masks for previously unseen images.
+These predicted masks are used both for:
+
+• quantitative evaluation using Intersection over Union (IoU)  
+• qualitative comparison between predicted masks and ground truth
+
+Example prediction results are shown below.
 
 -  Best public-test IoU observed in the architecture sweep: `0.9041`
 <p align="center">
