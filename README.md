@@ -123,6 +123,8 @@ The main takeaway from this sweep is that a **3-level U-Net with `base_channels=
 - It is a binary segmentation setup for a specific target mug class, not a general object-understanding system.
 - The project does not yet include calibration, timing benchmarks, deployment optimization, or integration into a robotics stack.
 - Results are reported with IoU on the provided dataset splits only; there is no ablation study or robustness analysis yet.
+  
+---
 
 ### Installation
 
