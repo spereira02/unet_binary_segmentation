@@ -147,9 +147,3 @@ Separate evaluation can be done on a private test set, for example
 ```bash
 python src/test.py --data_root ./datasets --split private_test --ckpt ./checkpoints/<timestamp>/checkpoint.pth
 ```
-
-Public-set evaluation with IoU reporting can be run with:
-
-```bash
-python src/test.py --data_root ./datasets --split public_test --ckpt ./checkpoints/<timestamp>/checkpoint.pth
-```
