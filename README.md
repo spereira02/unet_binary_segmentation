@@ -89,7 +89,7 @@ These predicted masks are used both for:
 
 Example prediction results are shown below.
 
--  Best public-test IoU observed in the architecture sweep: `0.9041`
+-  Best public-test IoU observed in the architecture sweep: `0.9123`
 <p align="center">
   <img src="media/rgb.jpg" width="250">
   <img src="media/gt.png" width="250">
