@@ -15,7 +15,7 @@ from model import build_model
 from utils import compute_iou
 
 class EarlyStopping:
-    def __init__(self, checkpoint_path, patience=7, verbose=False, delta=0):
+    def __init__(self, checkpoint_path, patience=7, verbose=False, delta=1e-3):
         self.checkpoint_path = checkpoint_path
         self.patience = patience
         self.verbose = verbose
@@ -97,11 +97,11 @@ def train(
     criterion = nn.BCEWithLogitsLoss()
     optimizer = optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-5)
     lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode="max", factor=0.1, patience=10
+        optimizer, mode="max", factor=0.1, patience=5
     )
     early_stopping = EarlyStopping(
         checkpoint_path=os.path.join(ckpt_dir, "checkpoint.pth"),
-        patience=7,
+        patience=10,
         verbose=True,
     )
 
