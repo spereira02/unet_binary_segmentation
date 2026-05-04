@@ -1,4 +1,4 @@
-# PyTorch U-Net for Binary Mug Segmentation
+# PyTorch U-Net for Binary Segmentation
 
 ## Overview
 
